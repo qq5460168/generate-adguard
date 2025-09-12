@@ -1,4 +1,4 @@
-name: 生成AdGuard Home拦截规则
+name: 处理AdGuard日志并生成规则
 
 on:
   # 每天凌晨2点运行
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  generate-rules:
+  process-logs:
     runs-on: ubuntu-latest
     
     steps:
@@ -20,30 +20,38 @@ jobs:
       with:
         python-version: '3.9'
         
-    - name: 准备日志文件
+    - name: 准备日志目录
       run: |
-        # 根据实际情况修改获取日志的方式
-        # 示例: 从远程服务器下载日志
-        # mkdir -p logs
-        # scp user@your-adguard-server:/path/to/AdGuardHome.log logs/
-        echo "请配置日志文件获取方式"
+        # 创建日志目录（如果不存在）
+        mkdir -p adguard_logs
         
-    - name: 生成拦截规则
+        # 根据实际情况修改获取日志的方式
+        # 示例：从远程服务器下载所有JSON日志文件
+        # echo "下载日志文件..."
+        # scp user@your-adguard-server:/path/to/adguard/logs/*.json adguard_logs/
+        
+        # 如果你使用的是本地日志，可以注释上面的scp命令
+        
+    - name: 创建规则目录
       run: |
-        python extract_and_generate_rules.py logs/AdGuardHome.log -o rules/blocked_rules_$(date +\%Y\%m\%d).txt -u
+        mkdir -p adguard_rules
+        
+    - name: 处理日志并生成规则
+      run: |
+        python process_adguard_logs.py adguard_logs adguard_rules -m 1
         
     - name: 上传规则文件
       uses: actions/upload-artifact@v3
       with:
-        name: adguard-rules
-        path: rules/
+        name: adguard-generated-rules
+        path: adguard_rules/
         retention-days: 30
         
     - name: 提交规则到仓库
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
-        git add rules/
+        git add adguard_rules/
         git commit -m "Auto-update rules: $(date +\%Y-\%m-\%d)"
         git push
       continue-on-error: true
