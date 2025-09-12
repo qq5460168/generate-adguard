@@ -1,0 +1,50 @@
+name: 生成AdGuard Home拦截规则
+
+on:
+  # 每天凌晨2点运行
+  schedule:
+    - cron: '0 2 * * *'
+  # 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  generate-rules:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+      
+    - name: 安装Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: 准备日志文件
+      run: |
+        # 根据实际情况修改获取日志的方式
+        # 示例: 从远程服务器下载日志
+        # mkdir -p logs
+        # scp user@your-adguard-server:/path/to/AdGuardHome.log logs/
+        echo "请配置日志文件获取方式"
+        
+    - name: 生成拦截规则
+      run: |
+        python extract_and_generate_rules.py logs/AdGuardHome.log -o rules/blocked_rules_$(date +\%Y\%m\%d).txt -u
+        
+    - name: 上传规则文件
+      uses: actions/upload-artifact@v3
+      with:
+        name: adguard-rules
+        path: rules/
+        retention-days: 30
+        
+    - name: 提交规则到仓库
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add rules/
+        git commit -m "Auto-update rules: $(date +\%Y-\%m-\%d)"
+        git push
+      continue-on-error: true
+    
