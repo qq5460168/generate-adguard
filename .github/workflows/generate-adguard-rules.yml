@@ -38,10 +38,11 @@ jobs:
         
     - name: 处理日志并生成规则
       run: |
+        # 修改为正确的脚本名称和参数格式
         python extract_and_generate_rules.py adguard_logs/*.json -o adguard_rules/filtered_rules.txt
         
     - name: 上传规则文件
-      uses: actions/upload-artifact@v4  # 已更新为v4版本
+      uses: actions/upload-artifact@v3
       with:
         name: adguard-generated-rules
         path: adguard_rules/
