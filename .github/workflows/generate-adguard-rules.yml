@@ -1,11 +1,9 @@
 name: 处理AdGuard日志并生成规则
 
 on:
-  # 每天凌晨2点运行
   schedule:
-    - cron: '0 2 * * *'
-  # 允许手动触发
-  workflow_dispatch:
+    - cron: '0 2 * * *'  # 每天凌晨2点运行
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   process-logs:
@@ -13,36 +11,30 @@ jobs:
     
     steps:
     - name: 检出代码
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4  # 升级到最新稳定版
       
     - name: 安装Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5  # 升级到最新稳定版
       with:
         python-version: '3.9'
         
     - name: 准备日志目录
       run: |
-        # 创建日志目录（如果不存在）
         mkdir -p adguard_logs
-        
-        # 根据实际情况修改获取日志的方式
-        # 示例：从远程服务器下载所有JSON日志文件
+        # 示例：从远程服务器下载日志（根据实际情况修改）
         # echo "下载日志文件..."
-        # scp user@your-adguard-server:/path/to/adguard/logs/*.json adguard_logs/
-        
-        # 如果你使用的是本地日志，可以注释上面的scp命令
+        # scp user@your-server:/path/to/adguard/logs/*.json adguard_logs/
         
     - name: 创建规则目录
-      run: |
-        mkdir -p adguard_rules
-        
+      run: mkdir -p adguard_rules
+      
     - name: 处理日志并生成规则
       run: |
-        # 修改为正确的脚本名称和参数格式
+        # 使用正确的脚本名和参数格式
         python extract_and_generate_rules.py adguard_logs/*.json -o adguard_rules/filtered_rules.txt
         
     - name: 上传规则文件
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # 升级到非deprecated版本
       with:
         name: adguard-generated-rules
         path: adguard_rules/
