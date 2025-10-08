@@ -6,7 +6,7 @@ from datetime import datetime
 def extract_and_generate_rules(log_files, output_file=None, unique=True):
     """
     从多个AdGuard Home JSON日志中提取拦截域名并生成AdGuard规则
-    同时与rules.txt中的基准规则合并，替换子域名规则
+    同时与rules.txt中的基准规则合并，排除error.txt中的域名
     """
     # 读取规则文件中的基准域名规则
     rules_file = os.path.join(os.path.dirname(output_file), 'rules.txt') if output_file else 'rules.txt'
@@ -14,6 +14,22 @@ def extract_and_generate_rules(log_files, output_file=None, unique=True):
     if os.path.exists(rules_file):
         with open(rules_file, 'r', encoding='utf-8') as f:
             base_rules = [line.strip() for line in f if line.strip()]
+    
+    # 读取error.txt中的域名（需要排除的域名）
+    error_domains = set()
+    error_file = os.path.join(os.path.dirname(output_file), 'error.txt') if output_file else 'error.txt'
+    if os.path.exists(error_file):
+        with open(error_file, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('!'):  # 忽略注释行
+                    # 处理两种格式：纯域名或AdGuard规则格式
+                    if line.startswith('||') and line.endswith('^'):
+                        domain = line[2:-1]
+                    else:
+                        domain = line
+                    error_domains.add(domain)
+        print(f"已加载 {len(error_domains)} 个需要排除的域名（来自error.txt）")
     
     # 提取基准域名（去掉开头的||和结尾的^）
     base_domains = set()
@@ -42,12 +58,15 @@ def extract_and_generate_rules(log_files, output_file=None, unique=True):
                         if result.get('IsFiltered', False) and result.get('Reason') == 3:
                             domain = log_entry.get('QH')
                             if domain:
+                                # 检查是否在error.txt中，若是则跳过
+                                if domain in error_domains:
+                                    continue
+                                
                                 rule = f"||{domain}^"
                                 # 检查是否是基准域名的子域名，如果是则跳过
                                 is_subdomain = False
-                                domain_clean = domain  # 已经是纯域名，不需要再处理
                                 for base in base_domains:
-                                    if domain_clean.endswith(f'.{base}') or domain_clean == base:
+                                    if domain.endswith(f'.{base}') or domain == base:
                                         is_subdomain = True
                                         break
                                 if not is_subdomain:
@@ -62,9 +81,26 @@ def extract_and_generate_rules(log_files, output_file=None, unique=True):
         except Exception as e:
             print(f"错误: 处理文件{log_file}时失败 - {str(e)}")
 
-    # 合并基准规则和新提取的规则（去重）
-    final_rules = set(domain_rules)
-    final_rules.update(base_rules)
+    # 合并基准规则和新提取的规则（去重），同时排除error.txt中的规则
+    final_rules = set()
+    # 处理新提取的规则
+    for rule in domain_rules:
+        if rule.startswith('||') and rule.endswith('^'):
+            domain = rule[2:-1]
+            if domain not in error_domains:
+                final_rules.add(rule)
+        else:
+            final_rules.add(rule)  # 非标准格式规则直接添加
+    
+    # 处理基准规则
+    for rule in base_rules:
+        if rule.startswith('||') and rule.endswith('^'):
+            domain = rule[2:-1]
+            if domain not in error_domains:
+                final_rules.add(rule)
+        else:
+            final_rules.add(rule)  # 非标准格式规则直接添加
+    
     final_rules = sorted(final_rules)
 
     # 处理输出
@@ -79,6 +115,8 @@ def extract_and_generate_rules(log_files, output_file=None, unique=True):
                 f.write(f"!   - {os.path.basename(file)}\n")
             if base_rules:
                 f.write(f"! 合并基准规则数: {len(base_rules)}\n")
+            if error_domains:
+                f.write(f"! 排除error.txt中的域名数: {len(error_domains)}\n")
             f.write("\n")
             
             for rule in final_rules:
