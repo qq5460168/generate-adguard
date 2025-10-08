@@ -1,6 +1,6 @@
 ! 从AdGuard Home日志生成的拦截规则
-! 生成时间: 2025-10-08 15:02:35
-! 总规则数: 2545
+! 生成时间: 2025-10-08 15:13:49
+! 总规则数: 2496
 ! 处理日志文件数: 12
 !   - 1.json
 !   - 2.json
@@ -14,48 +14,28 @@
 !   - 新建 文本文档 (2) (3).json
 !   - 新建 文本文档 (3).json
 !   - 新建 文本文档 (4).json
-! 合并基准规则数: 8
+! 合并基准规则数: 11
+! 排除error.txt中的域名数: 8
 
-||1757381946.0.sngdia.imtmp.net^
-||1757387213.0.sngdia.imtmp.net^
-||1757491984.0.sngdia.imtmp.net^
-||1757641920.0.sngdia.imtmp.net^
 ||249ee498-ws.va.huya.com^
 ||249ee4b8-ws.va.huya.com^
 ||34689.recommend_list.baidu.com^
 ||39vho0.tdum.alibaba.com^
-||3bc9ab62db8b44f893a36b220b44e98f.tgpa.imtmp.net^
 ||3p4.cn^
-||4.adsco.re^
-||4022b4f840914bca8a8b9cc83cfe16e4.tgpa.imtmp.net^
 ||4399stat.5054399.com^
-||43b7f0d28cb54da2a2ed8e1a2967e0d1.tgpa.imtmp.net^
-||48f3a85c12f24194a942794bfa5455db.tgpa.imtmp.net^
 ||4a9.cn^
 ||4jtvve.cdn-settings.appsflyersdk.com^
 ||4jtvve.conversions.appsflyersdk.com^
-||4jtvve.inapps.appsflyersdk.com^
 ||4jtvve.launches.appsflyersdk.com^
 ||4pn.cn^
 ||51.la^
 ||560-nbs-753.mktoresp.com^
-||6.adsco.re^
 ||62k3h4.tdum.alibaba.com^
 ||665ea0999104c20c5120e248f26c7151.jddebug.com^
 ||6f30e164-ws.va.huya.com^
-||6iitjxpa6ugv.l4.adsco.re^
-||6iitjxpa6ugv.n4.adsco.re^
-||6iitjxpa6ugv.s4.adsco.re^
-||726e27f3281e499a909eac9b6cc71deb.tgpa.imtmp.net^
 ||746-rou-361.mktoresp.com^
 ||75a91098-ws.va.huya.com^
-||7b33b024b6324259821744da9c247098.tgpa.imtmp.net^
-||82063c9dda584d98afcf5fa99de17b18.tgpa.imtmp.net^
-||8837e7285b1b4cfc820c950baf976b89.tgpa.imtmp.net^
-||8c94ddbe634548a297f909de923e7262.tgpa.imtmp.net^
 ||95q1s9.tdum.alibaba.com^
-||_2087._https.4.adsco.re^
-||_2087._https.6.adsco.re^
 ||_8106._https.sensors.cloud.tencent.com^
 ||_im64._tcp.jpush.cn^
 ||a.chnsrv.com^
@@ -68,7 +48,6 @@
 ||a0.app.xiaomi.com^
 ||a1.alibabausercontent.com^
 ||a2.xinhuanet.com^
-||a7139377c0f74288909ba382df22af37.tgpa.imtmp.net^
 ||aa.birdgesdk.com^
 ||aaid.umeng.com^
 ||aax.amazon-adsystem.com^
@@ -216,7 +195,6 @@
 ||aedns.weixin.qq.com^
 ||aegis.qq.com^
 ||aeventlog.beacon.qq.com^
-||afb9beadf6bf4e49adb8d66e77a870ac.tgpa.imtmp.net^
 ||afd.baidu.com^
 ||afdconf.baidu.com^
 ||agpicnsp-drcn.dbankcdn.com^
@@ -253,14 +231,6 @@
 ||alogus.umeng.com^
 ||als.baidu.com^
 ||alsc-fingerprint.ele.me^
-||alt1-mtalk.google.com^
-||alt2-mtalk.google.com^
-||alt3-mtalk.google.com^
-||alt4-mtalk.google.com^
-||alt5-mtalk.google.com^
-||alt6-mtalk.google.com^
-||alt7-mtalk.google.com^
-||alt8-mtalk.google.com^
 ||amap-aos-info-nogw.amap.com^
 ||amdc-sibling.alipay.com.cn^
 ||amdc.alipay.com^
@@ -507,9 +477,7 @@
 ||b.qchannel03.cn^
 ||b1-data.ads.heytapmobi.com^
 ||b10.yetacdn.org^
-||b1349571c5244e7996362ca8cd93f873.tgpa.imtmp.net^
 ||b2-data.ads.heytapmobi.com^
-||b6c9887cf98d444fb137c3d8f4ce09d7.tgpa.imtmp.net^
 ||babel-statistics-android.dreport.meituan.net^
 ||backstage-img-ssl.a.88cdn.com^
 ||badjs.weixinbridge.com^
@@ -588,7 +556,6 @@
 ||c-oneid.getui.net^
 ||c-ss.getui.com^
 ||c-ztuni.tec73.com^
-||c.adsco.re^
 ||c.amazon-adsystem.com^
 ||c.bing.com^
 ||c.data.mob.com^
@@ -602,7 +569,6 @@
 ||c15.d.meituan.net^
 ||c3-cache.browser.miui.com^
 ||c3.gdt.qq.com^
-||c3c4eb962aac497e87e2fb211abeff3d.tgpa.imtmp.net^
 ||ca.iadsdk.apple.com^
 ||cache.a.market.xiaomi.com^
 ||cache.wuji.qq.com^
@@ -745,7 +711,6 @@
 ||crashlyticsreports-pa.googleapis.com^
 ||creative.mnaspm.com^
 ||cs-feige.iqiyi.com^
-||cs5vugcqw7v7.s4.adsco.re^
 ||cse.avlyun.sec.miui.com^
 ||csp-reporting.cloudflare.com^
 ||cstm.baidu.com^
@@ -790,7 +755,6 @@
 ||devs.data.mob.com^
 ||devsdata.sq581.com^
 ||df.tanx.com^
-||dfd694dcd7bb44aca71fd36668ea01fa.tgpa.imtmp.net^
 ||dfe-mic.mob.com^
 ||dfe.mic.mob.com^
 ||dgstatic.jd.com^
@@ -890,14 +854,12 @@
 ||events-drcn.op.dbankcloud.com^
 ||events.op.hicloud.com^
 ||f27l5o.tdum.alibaba.com^
-||f42a43ed97574164bba1f3d5f0533978.tgpa.imtmp.net^
 ||factors.sofire.baidu.com^
 ||fapi.xdrun.com^
 ||fastonrt-stsdk.vivo.com.cn^
 ||fastort-stsdk.vivo.com.cn^
 ||fastpnrt-stsdk.vivo.com.cn^
 ||fastprt-stsdk.vivo.com.cn^
-||fbbcf1a44af742c18c45da4814561c57.tgpa.imtmp.net^
 ||fc-ccimage.baidu.com^
 ||fc1tn.baidu.com^
 ||fc2tn.baidu.com^
@@ -1127,9 +1089,6 @@
 ||ido.gepush.com^
 ||ido.getui.net^
 ||idx.m.hub.sandai.net^
-||ieifepxb1w4z.l4.adsco.re^
-||ieifepxb1w4z.n4.adsco.re^
-||ieifepxb1w4z.s4.adsco.re^
 ||iface2.iqiyi.com^
 ||ifs.tanx.com^
 ||ih-orion.avlyun.com^
@@ -1152,8 +1111,10 @@
 ||img2.360buyimg.com^
 ||imgstat.baidu.com^
 ||impaas-for-client.cn-shanghai.log.aliyuncs.com^
+||imtmp.net^
 ||in.appcenter.ms^
 ||inapps.appsflyer.com^
+||inapps.appsflyersdk.com^
 ||incoming.telemetry.mozilla.org^
 ||indivdict.gtimg.com^
 ||indivi-cdn-v6.shouji.sogou.com^
@@ -1414,9 +1375,6 @@
 ||mdp-usertrace-cn.heytapmobi.com^
 ||me.cpatrk.net^
 ||me.xdrig.com^
-||me0ux3c4vlv6.l4.adsco.re^
-||me0ux3c4vlv6.n4.adsco.re^
-||me0ux3c4vlv6.s4.adsco.re^
 ||media-service.soulapp.cn^
 ||media.trafficjunky.net^
 ||mercury.jd.com^
@@ -1545,9 +1503,6 @@
 ||o1.d.meituan.net^
 ||o2o-ad-dev.oss-cn-shanghai.aliyuncs.com^
 ||o2o.api.xiaomi.com^
-||o2odk6mfxlj4.l4.adsco.re^
-||o2odk6mfxlj4.n4.adsco.re^
-||o2odk6mfxlj4.s4.adsco.re^
 ||o3.d.meituan.net^
 ||o4.d.meituan.net^
 ||obus-cn.dc.heytapmobi.com^
@@ -1689,9 +1644,6 @@
 ||pis-tel-pcdn.youku.com^
 ||pix-cdn77.trafficjunky.net^
 ||pix-ht.trafficjunky.net^
-||pjtti4z429nd.l4.adsco.re^
-||pjtti4z429nd.n4.adsco.re^
-||pjtti4z429nd.s4.adsco.re^
 ||planconfig.openspeech.cn^
 ||plausible.midway.run^
 ||player-lg.youku.com^
