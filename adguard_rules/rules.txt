@@ -1,3 +1,8 @@
 ||v.smtcdns.com^
 ||m.ctrmi.cn^
 ||vegslb.com^
+||footprintdns.com^
+||gw.irs03.com^
+||nexusedgeio.com^
+||djvod.ndcimgs.com^
+||v1d.pkoplink.com^
