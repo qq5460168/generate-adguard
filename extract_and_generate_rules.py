@@ -1,11 +1,19 @@
-import os
 import json
+import argparse
+import os
 from datetime import datetime
 
-def process_and_merge_rules(filtered_file, rules_file):
-    # 读取 rules.txt 中的基准域名规则
-    with open(rules_file, 'r', encoding='utf-8') as f:
-        base_rules = [line.strip() for line in f if line.strip()]
+def extract_and_generate_rules(log_files, output_file=None, unique=True):
+    """
+    从多个AdGuard Home JSON日志中提取拦截域名并生成AdGuard规则
+    同时与rules.txt中的基准规则合并，替换子域名规则
+    """
+    # 读取规则文件中的基准域名规则
+    rules_file = os.path.join(os.path.dirname(output_file), 'rules.txt') if output_file else 'rules.txt'
+    base_rules = []
+    if os.path.exists(rules_file):
+        with open(rules_file, 'r', encoding='utf-8') as f:
+            base_rules = [line.strip() for line in f if line.strip()]
     
     # 提取基准域名（去掉开头的||和结尾的^）
     base_domains = set()
@@ -13,57 +21,88 @@ def process_and_merge_rules(filtered_file, rules_file):
         if rule.startswith('||') and rule.endswith('^'):
             domain = rule[2:-1]  # 提取域名部分
             base_domains.add(domain)
-    
-    # 读取 filtered_rules.txt 并分离注释和规则
-    header_comments = []
-    filtered_rules = []
-    with open(filtered_file, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            # 保留头部注释
-            if line.startswith('!'):
-                header_comments.append(line)
-            # 处理规则行
-            elif line.startswith('||') and line.endswith('^'):
-                domain = line[2:-1]
-                # 检查是否是某个基准域名的子域名
-                is_subdomain = False
-                for base in base_domains:
-                    if domain.endswith(f'.{base}') or domain == base:
-                        is_subdomain = True
-                        break
-                if not is_subdomain:
-                    filtered_rules.append(line)
-            else:
-                # 保留其他类型的规则（非域名规则）
-                filtered_rules.append(line)
-    
-    # 合并规则并去重（基准规则 + 未被过滤的规则）
-    all_rules = set(filtered_rules + base_rules)
-    # 排序规则（保持一致性）
-    sorted_rules = sorted(all_rules)
-    
-    # 写回 filtered_rules.txt
-    with open(filtered_file, 'w', encoding='utf-8') as f:
-        # 写回头部注释
-        for comment in header_comments:
-            f.write(comment + '\n')
-        f.write('\n')  # 空行分隔注释和规则
-        
-        # 写入合并后的规则
-        for rule in sorted_rules:
-            f.write(rule + '\n')
-    
-    print(f"处理完成，已更新 {filtered_file}")
-    print(f"基准规则数: {len(base_rules)}")
-    print(f"过滤后保留的原规则数: {len(filtered_rules)}")
-    print(f"合并去重后的总规则数: {len(sorted_rules)}")
 
-# 使用示例
+    # 从日志提取规则
+    domain_rules = set() if unique else []
+    processed_files = []
+
+    for log_file in log_files:
+        if not os.path.exists(log_file):
+            print(f"警告: 文件不存在 - {log_file}，已跳过")
+            continue
+            
+        processed_files.append(log_file)
+        try:
+            with open(log_file, 'r', encoding='utf-8') as f:
+                for line_num, line in enumerate(f, 1):
+                    try:
+                        log_entry = json.loads(line.strip())
+                        result = log_entry.get('Result', {})
+                        # 检查是否为拦截记录（Reason=3表示被过滤规则拦截）
+                        if result.get('IsFiltered', False) and result.get('Reason') == 3:
+                            domain = log_entry.get('QH')
+                            if domain:
+                                rule = f"||{domain}^"
+                                # 检查是否是基准域名的子域名，如果是则跳过
+                                is_subdomain = False
+                                domain_clean = domain  # 已经是纯域名，不需要再处理
+                                for base in base_domains:
+                                    if domain_clean.endswith(f'.{base}') or domain_clean == base:
+                                        is_subdomain = True
+                                        break
+                                if not is_subdomain:
+                                    if unique:
+                                        domain_rules.add(rule)
+                                    else:
+                                        domain_rules.append(rule)
+                    except json.JSONDecodeError:
+                        print(f"警告: {log_file}第{line_num}行不是有效JSON，已跳过")
+                    except Exception as e:
+                        print(f"警告: 处理{log_file}第{line_num}行出错 - {str(e)}，已跳过")
+        except Exception as e:
+            print(f"错误: 处理文件{log_file}时失败 - {str(e)}")
+
+    # 合并基准规则和新提取的规则（去重）
+    final_rules = set(domain_rules)
+    final_rules.update(base_rules)
+    final_rules = sorted(final_rules)
+
+    # 处理输出
+    if output_file:
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(f"! 从AdGuard Home日志生成的拦截规则\n")
+            f.write(f"! 生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"! 总规则数: {len(final_rules)}\n")
+            f.write(f"! 处理日志文件数: {len(processed_files)}\n")
+            for file in processed_files:
+                f.write(f"!   - {os.path.basename(file)}\n")
+            if base_rules:
+                f.write(f"! 合并基准规则数: {len(base_rules)}\n")
+            f.write("\n")
+            
+            for rule in final_rules:
+                f.write(rule + '\n')
+        
+        print(f"已生成{len(final_rules)}条规则，保存至{output_file}")
+    else:
+        print("生成的AdGuard拦截规则:")
+        print(f"! 生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"! 总规则数: {len(final_rules)}\n")
+        for rule in final_rules:
+            print(rule)
+    
+    return final_rules
+
+def main():
+    parser = argparse.ArgumentParser(description='从AdGuard Home日志提取拦截规则并与基准规则合并')
+    parser.add_argument('log_files', nargs='+', help='AdGuard日志文件路径（支持多个文件）')
+    parser.add_argument('-o', '--output', help='输出规则文件路径')
+    parser.add_argument('-u', '--unique', action='store_true', default=True, 
+                       help='只保留唯一规则（默认开启）')
+    args = parser.parse_args()
+    
+    extract_and_generate_rules(args.log_files, args.output, args.unique)
+
 if __name__ == "__main__":
-    process_and_merge_rules(
-        'generate-adguard/adguard_rules/filtered_rules.txt',
-        'generate-adguard/adguard_rules/rules.txt'
-    )
+    main()
