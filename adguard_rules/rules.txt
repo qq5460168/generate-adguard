@@ -9,4 +9,5 @@
 ||imtmp.net^
 ||inapps.appsflyersdk.com^
 ||adsco.re^
+||gvt2.com^
 
