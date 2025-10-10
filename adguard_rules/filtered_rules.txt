@@ -1,6 +1,6 @@
 ! 从AdGuard Home日志生成的拦截规则
-! 生成时间: 2025-10-09 02:59:17
-! 总规则数: 2496
+! 生成时间: 2025-10-10 03:00:24
+! 总规则数: 2486
 ! 处理日志文件数: 12
 !   - 1.json
 !   - 2.json
@@ -14,7 +14,7 @@
 !   - 新建 文本文档 (2) (3).json
 !   - 新建 文本文档 (3).json
 !   - 新建 文本文档 (4).json
-! 合并基准规则数: 11
+! 合并基准规则数: 12
 ! 排除error.txt中的域名数: 8
 
 ||249ee498-ws.va.huya.com^
@@ -507,12 +507,6 @@
 ||bdsp.x.jd.com^
 ||beacon-api.aliyuncs.com^
 ||beacon.cdn.qq.com^
-||beacons.gcp.gvt2.com^
-||beacons.gvt2.com^
-||beacons2.gvt2.com^
-||beacons3.gvt2.com^
-||beacons4.gvt2.com^
-||beacons5.gvt2.com^
 ||beacons5.gvt3.com^
 ||bes-mtj.baidu.com^
 ||bgg.baidu.com^
@@ -816,11 +810,6 @@
 ||dynamicad.kfc.com.cn^
 ||e.jparking.cn^
 ||e.tapdb.net^
-||e2c12.gcp.gvt2.com^
-||e2c17.gcp.gvt2.com^
-||e2c3.gcp.gvt2.com^
-||e2c49.gcp.gvt2.com^
-||e2c83.gcp.gvt2.com^
 ||easytomessage.com^
 ||ecma.bdimg.com^
 ||ecmb.bdimg.com^
@@ -980,6 +969,7 @@
 ||guid.tpns.tencent.com^
 ||guide-acs.m.taobao.com^
 ||guide-acs4miniapp-inner.m.taobao.com^
+||gvt2.com^
 ||gw.irs03.com^
 ||gw5.push.mcp.weibo.cn^
 ||gw5bak.chinamobile.push.mcp.weibo.cn^
