@@ -16,7 +16,7 @@ jobs:
     - name: 安装Python
       uses: actions/setup-python@v5  # 升级到最新稳定版
       with:
-        python-version: '3.9'
+        python-version: '3.12'  # 修复: 3.9 已 EOL，改用受支持的 3.12
         
     - name: 准备日志目录
       run: |
